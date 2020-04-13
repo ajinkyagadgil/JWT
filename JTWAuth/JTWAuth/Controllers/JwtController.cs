@@ -10,7 +10,7 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace JTWAuth.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api")]
     [ApiController]
     public class JwtController : ControllerBase
     {
@@ -23,7 +23,7 @@ namespace JTWAuth.Controllers
 
         [Route("auth/login")]
         [HttpPost]
-        public IActionResult Login(User user)
+        public IActionResult Login([FromBody]User user)
         {
             var isValidUser = AuthenticateUser(user);
             if (isValidUser)
