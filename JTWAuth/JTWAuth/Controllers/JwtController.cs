@@ -4,12 +4,14 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using JTWAuth.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 
 namespace JTWAuth.Controllers
 {
+    [Authorize]
     [Route("api")]
     [ApiController]
     public class JwtController : ControllerBase
@@ -21,6 +23,7 @@ namespace JTWAuth.Controllers
             _config = config;
         }
 
+        [AllowAnonymous]
         [Route("auth/login")]
         [HttpPost]
         public IActionResult Login([FromBody]User user)
