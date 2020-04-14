@@ -17,7 +17,7 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "JTWAuth": {
+    "JWTAuth": {
       "commandName": "Project",
       "launchBrowser": true,
       "launchUrl": "api/user",

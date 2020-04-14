@@ -1,4 +1,4 @@
-﻿namespace JTWAuth.Models
+﻿namespace JWTAuth.Models
 {
     public class User
     {

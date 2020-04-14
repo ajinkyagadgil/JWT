@@ -1,5 +1,5 @@
 using System.Text;
-using JTWAuth.Models;
+using JWTAuth.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -8,7 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 
-namespace JTWAuth
+namespace JWTAuth
 {
     public class Startup
     {
