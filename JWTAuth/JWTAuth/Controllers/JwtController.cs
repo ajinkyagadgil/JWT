@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using JWTAuth.Models;
@@ -18,6 +19,13 @@ namespace JWTAuth.Controllers
     {
         private IConfiguration _config;
 
+        public List<User> users = new List<User>()
+        {
+            new User{ email = "superAdmin@test.com", password = "super", role = Roles.SuperAdmin},
+            new User{ email = "admin@test.com", password = "admin", role = Roles.Admin},
+            new User{ email = "user@test.com", password = "user", role = Roles.User},
+        };
+
         public JwtController(IConfiguration config)
         {
             _config = config;
@@ -28,10 +36,11 @@ namespace JWTAuth.Controllers
         [HttpPost]
         public IActionResult Login([FromBody]User user)
         {
-            var isValidUser = AuthenticateUser(user);
-            if (isValidUser)
+            var userData = users.Where(x => x.email.ToLower() == user.email.ToLower() && x.password == user.password).FirstOrDefault();
+
+            if (userData != null)
             {
-                var token = GenerateJWT(user);
+                var token = GenerateJWT(userData);
                 return Ok(new { token });
             }
             else
@@ -44,7 +53,8 @@ namespace JWTAuth.Controllers
             {
                 Subject = new ClaimsIdentity(new Claim[]
                 {
-                    new Claim("Email", user.Email)
+                    new Claim(ClaimTypes.Email, user.email),
+                    new Claim(ClaimTypes.Role, user.role)
                 }),
                 Expires = DateTime.UtcNow.AddHours(2),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["JWT:Key"])), SecurityAlgorithms.HmacSha256),
@@ -55,28 +65,46 @@ namespace JWTAuth.Controllers
             return token;
         }
 
-        private bool AuthenticateUser(User user)
-        {
-            //For demo using static user information
-            if (user.Email == "admin@test.com" && user.Password == "admin")
-            {
-                return true;
-            }
-            else
-                return false;
-        }
-
+        [Authorize(Roles = Roles.User)]
         [Route("user")]
         [HttpGet]
-        public List<string> GetUsers()
+        public List<string> GetDataForUsers()
         {
-            var users = new List<string>
+            var data = new List<string>
             {
-                "Value1",
-                "Value2",
-                "Value3"
+                "userData1",
+                "userData2",
+                "userData3"
             };
-            return users;
+            return data;
+        }
+
+        [Authorize(Roles = Roles.SuperAdmin)]
+        [Route("superAdmin")]
+        [HttpGet]
+        public List<string> GetDataForSuperAdmin()
+        {
+            var data = new List<string>
+            {
+                "SuperAdmin1",
+                "SuperAdmin2",
+                "SuperAdmin3"
+            };
+            return data;
+        }
+
+        [Authorize(Roles = Roles.Admin)]
+        [Route("admin")]
+        [HttpGet]
+        public List<string> GetDataForAdmin()
+        {
+            var data = new List<string>
+            {
+                "Admin1",
+                "Admin2",
+                "Admin3"
+            };
+            return data;
         }
     }
 }
