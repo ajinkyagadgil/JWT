@@ -31,6 +31,11 @@ namespace JWTAuth.Controllers
             _config = config;
         }
 
+        /// <summary>
+        /// Verifies the credentials and generate token if the credentials are valid.
+        /// </summary>
+        /// <param name="user">User Model</param>
+        /// <returns></returns>
         [AllowAnonymous]
         [Route("auth/login")]
         [HttpPost]
@@ -47,6 +52,11 @@ namespace JWTAuth.Controllers
                 return Unauthorized();
         }
 
+        /// <summary>
+        /// Gneerates JWT token
+        /// </summary>
+        /// <param name="user">User Model</param>
+        /// <returns>JWT Token</returns>
         private string GenerateJWT(User user)
         {
             var tokenDescriptor = new SecurityTokenDescriptor
@@ -65,6 +75,10 @@ namespace JWTAuth.Controllers
             return token;
         }
 
+        /// <summary>
+        /// Get user contents
+        /// </summary>
+        /// <returns></returns>
         [Authorize(Roles = Roles.User)]
         [Route("user")]
         [HttpGet]
@@ -79,6 +93,10 @@ namespace JWTAuth.Controllers
             return data;
         }
 
+        /// <summary>
+        /// Get Super Admin contents
+        /// </summary>
+        /// <returns></returns>
         [Authorize(Roles = Roles.SuperAdmin)]
         [Route("superAdmin")]
         [HttpGet]
@@ -93,6 +111,10 @@ namespace JWTAuth.Controllers
             return data;
         }
 
+        /// <summary>
+        /// Get Admin contents
+        /// </summary>
+        /// <returns></returns>
         [Authorize(Roles = Roles.Admin)]
         [Route("admin")]
         [HttpGet]
